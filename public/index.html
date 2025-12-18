@@ -6,187 +6,219 @@
 <title>LLM Chat App</title>
 
 <style>
-    /* ------------------------------
-       Modern Theme Variables
-    ------------------------------ */
-    :root {
-        --accent: #ff7b00;
-        --accent-glow: rgba(255, 123, 0, 0.6);
-        --bg: #0d0d0f;
-        --glass-bg: rgba(255, 255, 255, 0.06);
-        --glass-border: rgba(255, 255, 255, 0.15);
-        --text: #e5e5e5;
-        --text-light: #9ca3af;
-        --user-msg: rgba(255, 123, 0, 0.15);
-        --assistant-msg: rgba(255, 255, 255, 0.08);
-    }
+/* -------------------------------------------------
+   Theme Variables
+------------------------------------------------- */
+:root {
+    --accent: #ff7b00;
+    --accent-glow: rgba(255, 123, 0, 0.6);
+    --bg: #0d0d0f;
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --text: #e5e5e5;
+    --text-light: #9ca3af;
+    --user-msg: rgba(255, 123, 0, 0.15);
+    --assistant-msg: rgba(255, 255, 255, 0.08);
+}
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    body {
-        font-family: "Inter", system-ui, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem;
-    }
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
 
-    /* ------------------------------
-       Header
-    ------------------------------ */
-    header {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
+/* -------------------------------------------------
+   Header
+------------------------------------------------- */
+header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
 
-    h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #ff7b00, #ffbb55);
-        -webkit-background-clip: text;
-        color: transparent;
-    }
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ff7b00, #ffbb55);
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-    header p {
-        color: var(--text-light);
-        font-size: 0.9rem;
-    }
+header p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
 
-    /* ------------------------------
-       Chat Container (Glass Panel)
-    ------------------------------ */
-    .chat-container {
-        width: 100%;
-        max-width: 900px;
-        height: 75vh;
-        display: flex;
-        flex-direction: column;
-        border-radius: 20px;
-        padding: 1rem;
-        background: var(--glass-bg);
-        backdrop-filter: blur(18px);
-        border: 1px solid var(--glass-border);
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-        position: relative;
-    }
+/* -------------------------------------------------
+   Mode Selector
+------------------------------------------------- */
+.mode-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
 
-    /* ------------------------------
-       Chat Messages
-    ------------------------------ */
-    .chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding-right: 0.5rem;
-        scroll-behavior: smooth;
-    }
+.mode-button {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: 0.2s ease;
+    backdrop-filter: blur(10px);
+}
 
-    .message {
-        max-width: 75%;
-        padding: 0.9rem 1.1rem;
-        margin-bottom: 1rem;
-        border-radius: 14px;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+.mode-button:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
 
-    .message:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
+.mode-button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
 
-    .user-message {
-        background: var(--user-msg);
-        margin-left: auto;
-        border: 1px solid var(--accent-glow);
-    }
+/* -------------------------------------------------
+   Chat Container
+------------------------------------------------- */
+.chat-container {
+    width: 100%;
+    max-width: 900px;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 1rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
 
-    .assistant-message {
-        background: var(--assistant-msg);
-        border: 1px solid var(--glass-border);
-    }
+/* -------------------------------------------------
+   Chat Messages
+------------------------------------------------- */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    scroll-behavior: smooth;
+}
 
-    /* ------------------------------
-       Typing Indicator
-    ------------------------------ */
-    .typing-indicator {
-        font-style: italic;
-        color: var(--text-light);
-        margin-bottom: 0.5rem;
-        display: none;
-    }
+.message {
+    max-width: 75%;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .typing-indicator.visible {
-        display: block;
-    }
+.message:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
 
-    /* ------------------------------
-       Input Bar (Floating)
-    ------------------------------ */
-    .message-input {
-        display: flex;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(12px);
-        border-radius: 14px;
-        margin-top: 0.5rem;
-    }
+.user-message {
+    background: var(--user-msg);
+    margin-left: auto;
+    border: 1px solid var(--accent-glow);
+}
 
-    #user-input {
-        flex: 1;
-        padding: 0.75rem 1rem;
-        border-radius: 10px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text);
-        resize: none;
-        min-height: 48px;
-        outline: none;
-        transition: border 0.2s ease;
-    }
+.assistant-message {
+    background: var(--assistant-msg);
+    border: 1px solid var(--glass-border);
+}
 
-    #user-input:focus {
-        border-color: var(--accent);
-    }
+/* -------------------------------------------------
+   Typing Indicator
+------------------------------------------------- */
+.typing-indicator {
+    font-style: italic;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    display: none;
+}
 
-    #send-button {
-        padding: 0 1.5rem;
-        border: none;
-        border-radius: 10px;
-        background: var(--accent);
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+.typing-indicator.visible {
+    display: block;
+}
 
-    #send-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 12px var(--accent-glow);
-    }
+/* -------------------------------------------------
+   Input Bar
+------------------------------------------------- */
+.message-input {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    margin-top: 0.5rem;
+}
 
-    #send-button:disabled {
-        background: #555;
-        cursor: not-allowed;
-    }
+#user-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    resize: none;
+    min-height: 48px;
+    outline: none;
+    transition: border 0.2s ease;
+}
 
-    /* ------------------------------
-       Footer
-    ------------------------------ */
-    footer {
-        margin-top: 1rem;
-        color: var(--text-light);
-        font-size: 0.85rem;
-    }
+#user-input:focus {
+    border-color: var(--accent);
+}
+
+#send-button {
+    padding: 0 1.5rem;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#send-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+#send-button:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+/* -------------------------------------------------
+   Footer
+------------------------------------------------- */
+footer {
+    margin-top: 1rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
 </style>
 </head>
 
@@ -197,19 +229,34 @@
     <p>Powered by Cloudflare Workers AI</p>
 </header>
 
+<!-- Mode Selector -->
+<div class="mode-selector">
+    <button class="mode-button active">Smart</button>
+    <button class="mode-button">Thinker</button>
+    <button class="mode-button">Study</button>
+    <button class="mode-button">Creative</button>
+    <button class="mode-button">Image Gen</button>
+</div>
+
+<!-- Chat Container -->
 <div class="chat-container">
+
     <div id="chat-messages" class="chat-messages">
         <div class="message assistant-message">
-            Hello! I'm an LLM chat app powered by Cloudflare Workers AI. How can I help you today?
+            Hello! I'm an LLM chat app powered by Cloudflare Workers AI.  
+            How can I help you today?
         </div>
     </div>
 
-    <div class="typing-indicator" id="typing-indicator">AI is thinking...</div>
+    <div class="typing-indicator" id="typing-indicator">
+        AI is thinking...
+    </div>
 
     <div class="message-input">
         <textarea id="user-input" placeholder="Type your message..." rows="1"></textarea>
         <button id="send-button">Send</button>
     </div>
+
 </div>
 
 <footer>
